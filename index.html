@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm Tự tình II - Hồ Xuân Hương</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif-title { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-amber-50 to-orange-100 min-h-screen text-slate-800 flex flex-col items-center justify-center p-4 sm:p-6">
+
+    <div class="w-full max-w-3xl bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl border border-rose-100 overflow-hidden transition-all duration-300">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-rose-700 to-amber-700 text-white p-6 sm:p-8 text-center relative">
+            <div class="absolute top-4 left-4 bg-white/20 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase">
+                Văn học 11
+            </div>
+            <h1 class="serif-title text-2xl sm:text-3xl font-bold mb-2">Thử Thách Trắc Nghiệm: Tự Tình II</h1>
+            <p class="text-rose-100 text-sm sm:text-base">Hồ Xuân Hương • 13 câu hỏi từ Dễ đến Cực khó</p>
+        </header>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="p-8 sm:p-12 text-center">
+            <div class="max-w-md mx-auto space-y-4">
+                <div class="w-16 h-16 bg-rose-100 text-rose-700 rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
+                    🌸
+                </div>
+                <h2 class="text-xl font-bold text-slate-700">Bạn đã sẵn sàng chinh phục thử thách?</h2>
+                <p class="text-sm text-slate-500">
+                    Bộ câu hỏi bao gồm: 4 câu Dễ, 4 câu Trung bình, 4 câu Khó và 1 câu Cực cực cực khó. Mỗi câu trả lời đúng sẽ giúp bạn khám phá sâu hơn về kiệt tác thơ ca trung đại này!
+                </p>
+                <button onclick="startQuiz()" class="mt-4 w-full py-3 px-6 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    Bắt đầu làm bài
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden p-6 sm:p-8">
+            <!-- Progress Bar & Stats -->
+            <div class="flex justify-between items-center mb-4 text-sm font-medium text-slate-500">
+                <span id="question-counter">Câu 1 / 13</span>
+                <span id="difficulty-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">Dễ</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full mb-6 overflow-hidden">
+                <div id="progress-bar" class="bg-rose-600 h-full transition-all duration-300" style="width: 7.69%"></div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6">
+                <h3 id="question-text" class="text-lg sm:text-xl font-semibold text-slate-800 leading-relaxed">
+                    Nội dung câu hỏi sẽ hiển thị ở đây...
+                </h3>
+            </div>
+
+            <!-- Options List -->
+            <div id="options-container" class="space-y-3 mb-6">
+                <!-- Options injected via JS -->
+            </div>
+
+            <!-- Rationale Box -->
+            <div id="rationale-box" class="hidden mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-900 animate-fadeIn">
+                <span class="font-bold block mb-1">💡 Giải thích chi tiết:</span>
+                <p id="rationale-text"></p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="flex justify-end">
+                <button id="next-btn" onclick="nextQuestion()" class="hidden py-2.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl shadow-md transition-all">
+                    Câu tiếp theo →
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden p-8 sm:p-12 text-center">
+            <div class="max-w-md mx-auto space-y-4">
+                <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                    🏆
+                </div>
+                <h2 class="serif-title text-2xl sm:text-3xl font-bold text-slate-800">Hoàn thành xuất sắc!</h2>
+                <p class="text-slate-600">Số điểm của bạn:</p>
+                <div class="text-4xl font-extrabold text-rose-600 my-2">
+                    <span id="final-score">0</span> / 13
+                </div>
+                <p id="result-message" class="text-sm text-slate-500"></p>
+                <button onclick="restartQuiz()" class="mt-4 w-full py-3 px-6 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl shadow-lg transition-all">
+                    Làm lại từ đầu
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="mt-6 text-xs text-slate-500 text-center">
+        Ứng dụng ôn tập Ngữ văn • Tự tình II (Hồ Xuân Hương)
+    </footer>
+
+    <script>
+        const questions = [
+            // DỄ (4 câu)
+            {
+                difficulty: "Dễ",
+                color: "bg-emerald-100 text-emerald-800",
+                question: "Bài thơ Tự tình II của Hồ Xuân Hương được viết theo thể thơ nào?",
+                options: [
+                    { text: "Thất ngôn lục bát.", isCorrect: false, rationale: "Thể thơ thất ngôn lục bát gồm các cặp câu 7 chữ và 6 chữ, không phải thể thơ của bài này." },
+                    { text: "Thất ngôn bát cú Đường luật.", isCorrect: true, rationale: "Bài thơ tuân thủ nghiêm ngặt quy tắc của thể thất ngôn bát cú Đường luật (8 câu, mỗi câu 7 chữ)." },
+                    { text: "Ngũ ngôn bát cú.", isCorrect: false, rationale: "Ngũ ngôn bát cú là thơ 5 chữ, trong khi Tự tình II gồm các câu 7 chữ." },
+                    { text: "Thơ tự do.", isCorrect: false, rationale: "Thơ tự do không có niêm luật cố định như thơ Đường luật trong bài." }
+                ]
+            },
+            {
+                difficulty: "Dễ",
+                color: "bg-emerald-100 text-emerald-800",
+                question: "Khung cảnh thời gian được nhắc đến ở hai câu thơ đầu (\"Đêm khuya văng vẳng trống dồn / Trơ cái hồng nhan với nước non\") là vào lúc nào?",
+                options: [
+                    { text: "Hoàng hôn.", isCorrect: false, rationale: "Hoàng hôn là lúc chiều tà, không khớp với từ 'đêm khuya' trong văn bản." },
+                    { text: "Buổi sáng sớm.", isCorrect: false, rationale: "Sáng sớm là bình minh, trái ngược với không gian đêm vắng." },
+                    { text: "Đêm khuya.", isCorrect: true, rationale: "Bối cảnh mở đầu bài thơ diễn ra vào đêm khuya thanh vắng, làm nổi bật sự cô đơn." },
+                    { text: "Giữa trưa nắng gắt.", isCorrect: false, rationale: "Giữa trưa không xuất hiện tiếng trống dồn dập trong đêm." }
+                ]
+            },
+            {
+                difficulty: "Dễ",
+                color: "bg-emerald-100 text-emerald-800",
+                question: "Hai câu thực (\"Chén rượu hương đưa say lại tỉnh / Vầng trăng bóng xế khuyết chưa tròn\") thể hiện tâm trạng gì của nhân vật trữ tình?",
+                options: [
+                    { text: "Vui vẻ, hào hứng với cuộc sống.", isCorrect: false, rationale: "Tâm trạng nhân vật tràn ngập nỗi buồn tủi và ý thức về sự dở dang chứ không vui vẻ." },
+                    { text: "Bế tắc, cay đắng trước số phận trớ trêu, dở dang.", isCorrect: true, rationale: "Say rồi lại tỉnh, trăng xế mà vẫn khuyết chưa tròn gợi lên sự bẽ bàng, muộn màng và dở dang." },
+                    { text: "Lo lắng, bồn chồn cho tương lai đất nước.", isCorrect: false, rationale: "Đây là bài thơ trữ tình cá thể thể hiện nỗi niềm cá nhân, không bàn chuyện thời cuộc." },
+                    { text: "Thản nhiên, coi thường mọi gian khổ.", isCorrect: false, rationale: "Nhân vật trữ tình mang nặng nỗi đau thân phận, không phải sự thản nhiên vô tâm." }
+                ]
+            },
+            {
+                difficulty: "Dễ",
+                color: "bg-emerald-100 text-emerald-800",
+                question: "Hai hình ảnh thiên nhiên nào xuất hiện trong hai câu luận (\"Xiên ngang mặt đất, rêu làm đám / Đâm toạc chân mây, đá mấy hòn\")?",
+                options: [
+                    { text: "Hoa tulip và rêu.", isCorrect: false, rationale: "Hoa tulip không xuất hiện trong thơ trung đại Việt Nam." },
+                    { text: "Rêu và đá.", isCorrect: true, rationale: "Rêu và đá là hai hình ảnh thiên nhiên nhỏ bé nhưng mang sức sống mãnh liệt, dữ dội." },
+                    { text: "Sóng nước và mây trắng.", isCorrect: false, rationale: "Mây chỉ xuất hiện ở hình ảnh chân mây, còn chủ thể là đá chứ không phải sóng nước." },
+                    { text: "Trăng và núi.", isCorrect: false, rationale: "Trăng xuất hiện ở câu thực, không phải câu luận." }
+                ]
+            },
+
+            // TRUNG BÌNH (4 câu)
+            {
+                difficulty: "Trung bình",
+                color: "bg-blue-100 text-blue-800",
+                question: "Biện pháp nghệ thuật nổi bật nhất được sử dụng trong hai câu luận (\"Xiên ngang mặt đất, rêu làm đám / Đâm toạc chân mây, đá mấy hòn\") là gì?",
+                options: [
+                    { text: "Nhân hóa và so sánh.", isCorrect: false, rationale: "Mặc dù có tính chất gợi hình, nghệ thuật cốt lõi tạo sức nặng là đảo ngữ kết hợp động từ mạnh." },
+                    { text: "Điệp ngữ và hoán dụ.", isCorrect: false, rationale: "Không chủ yếu dùng điệp ngữ hay hoán dụ để tạo sức bật cho câu thơ." },
+                    { text: "Đảo ngữ kết hợp với sử dụng các động từ, tính từ mạnh.", isCorrect: true, rationale: "Các cụm từ 'Xiên ngang', 'Đâm toạc' đặt ở đầu câu kết hợp động từ mạnh thể hiện sự bứt phá." },
+                    { text: "Nói giảm nói tránh.", isCorrect: false, rationale: "Đây là nghệ thuật cường điệu hóa sức sống phản kháng chứ không phải nói giảm nói tránh." }
+                ]
+            },
+            {
+                difficulty: "Trung bình",
+                color: "bg-blue-100 text-blue-800",
+                question: "Từ \"xuân\" trong câu thơ cuối (\"Xuân đi xuân lại lại, / Mảnh tình san sẻ tí con con!\") mang hai lớp nghĩa chính nào?",
+                options: [
+                    { text: "Tuổi trẻ của con người và mùa xuân của thiên nhiên.", isCorrect: true, rationale: "Từ 'xuân' vừa chỉ mùa xuân của đất trời vừa chỉ tuổi xuân của người phụ nữ đang trôi qua." },
+                    { text: "Niềm vui của cuộc sống và nỗi buồn của thời gian.", isCorrect: false, rationale: "Ý nghĩa của từ xuân không phải chỉ niềm vui." },
+                    { text: "Sức sống của cây cỏ và sự trôi chảy của dòng sông.", isCorrect: false, rationale: "Đây chỉ là biểu hiện phụ, không bao hàm trọn vẹn lớp nghĩa tuổi trẻ." },
+                    { text: "Khát vọng hạnh phúc và sự cam chịu số phận.", isCorrect: false, rationale: "Đó là trạng thái tâm lý, không phải định nghĩa về từ 'xuân'." }
+                ]
+            },
+            {
+                difficulty: "Trung bình",
+                color: "bg-blue-100 text-blue-800",
+                question: "Cụm từ \"Trơ cái hồng nhan với nước non\" thể hiện thái độ gì của tác giả trước nghịch cảnh?",
+                options: [
+                    { text: "Sự tủi hổ, cay đắng nhưng cũng đầy bản lĩnh, thách thức.", isCorrect: true, rationale: "'Trơ' vừa là sự trơ trọi, bẽ bàng vừa là sự trơ tráo, thách thức đối đầu với duyên phận trớ trêu." },
+                    { text: "Sự e ấp, thẹn thùng của người phụ nữ phong kiến.", isCorrect: false, rationale: "Hồ Xuân Hương nổi tiếng mạnh mẽ, cá tính, không phải sự e ấp thông thường." },
+                    { text: "Sự thờ ơ, không quan tâm đến thế sự xung quanh.", isCorrect: false, rationale: "Tác giả vô cùng thấm thía và đau đớn chứ không hề thờ ơ." },
+                    { text: "Sự hoang mang, sợ hãi trước thời gian trôi nhanh.", isCorrect: false, rationale: "Bày tỏ sự bất mãn và thách thức chứ không phải nỗi sợ hãi yếu đuối." }
+                ]
+            },
+            {
+                difficulty: "Trung bình",
+                color: "bg-blue-100 text-blue-800",
+                question: "Sức sống phản kháng của thiên nhiên (rêu, đá) trong hai câu luận gián tiếp thể hiện đặc điểm gì ở Hồ Xuân Hương?",
+                options: [
+                    { text: "Sự dịu dàng, nhẫn nại.", isCorrect: false, rationale: "Đặc điểm của Hồ Xuân Hương là sự bướng bỉnh, mãnh liệt chứ không phải nhẫn nại." },
+                    { text: "Sự cam chịu, khuất phục hoàn toàn.", isCorrect: false, rationale: "Trái ngược hoàn toàn với sự khuất phục, đây là sự chống trả." },
+                    { text: "Cá tính mạnh mẽ, luôn khát khao bứt phá khỏi gông cùm số phận.", isCorrect: true, rationale: "Thiên nhiên gồng mình vươn lên cũng chính là ý chí phản kháng của cái tôi ngẩng cao đầu." },
+                    { text: "Thái độ bất cần đời và buông xuôi.", isCorrect: false, rationale: "Bất cần nhưng vẫn khao khát hạnh phúc cháy bỏng, không buông xuôi." }
+                ]
+            },
+
+            // KHÓ (4 câu)
+            {
+                difficulty: "Khó",
+                color: "bg-amber-100 text-amber-800",
+                question: "Nghệ thuật tăng tiến kết hợp với cách dùng từ trong câu thơ \"Mảnh tình san sẻ tí con con!\" có dụng ý nghệ thuật gì?",
+                options: [
+                    { text: "Nhấn mạnh sự giàu sang, đầy đủ về mặt tình cảm của tác giả.", isCorrect: false, rationale: "Ngược lại, các từ ngữ này biểu thị sự thiếu thốn cùng cực." },
+                    { text: "Khắc họa sự chia nhỏ, vỡ vụn đến mức tối đa của tình yêu, làm nổi bật bi kịch thân phận làm lẽ.", isCorrect: true, rationale: "'Mảnh tình' vốn đã nhỏ, lại 'san sẻ', rồi còn 'tí con con' làm tăng cấp độ bi kịch tình duyên dở dang, lẻ loi." },
+                    { text: "Thể hiện sự hào sảng, sẵn sàng dâng hiến tình yêu cho người khác.", isCorrect: false, rationale: "Đây là tiếng thở dài cay đắng về kiếp chồng chung chứ không phải sự dâng hiến hào sảng." },
+                    { text: "Cho thấy sự lạc quan của tác giả khi đối mặt với tình yêu.", isCorrect: false, rationale: "Không có sự lạc quan nào ở đây, chỉ có nỗi xót xa tủi cực." }
+                ]
+            },
+            {
+                difficulty: "Khó",
+                color: "bg-amber-100 text-amber-800",
+                question: "Mối quan hệ giữa cảnh vật thiên nhiên (rêu, đá) và tâm trạng con người trong hai câu luận phản ánh điều gì?",
+                options: [
+                    { text: "Bút pháp tả cảnh ngụ tình truyền thống, dùng thiên nhiên êm đềm để xoa dịu.", isCorrect: false, rationale: "Cảnh vật ở đây không êm đềm mà dữ dội, cựa quậy mạnh mẽ." },
+                    { text: "Sự phụ thuộc hoàn toàn của con người vào thiên nhiên.", isCorrect: false, rationale: "Thiên nhiên là phương tiện để bộc lộ nội tâm con người." },
+                    { text: "Sự ngoại hiện tâm trạng: thiên nhiên mang sức nén, sự uất ức và khát vọng bứt phá giống hệt nội tâm nhân vật.", isCorrect: true, rationale: "Rêu và đá bị dẫm đạp nhưng vẫn xiên ngang, đâm toạc chính là sự phóng chiếu tâm hồn uất ức, muốn phá vỡ giới hạn." },
+                    { text: "Bút pháp tượng trưng siêu thực mượn hình ảnh để giễu nhại tầng lớp thống trị.", isCorrect: false, rationale: "Đây là sự thể hiện tôi trữ tình cá thể đối diện với nghịch cảnh số phận." }
+                ]
+            },
+            {
+                difficulty: "Khó",
+                color: "bg-amber-100 text-amber-800",
+                question: "Điểm khác biệt căn bản về mặt cái tôi trữ tình giữa chùm thơ Tự tình của Hồ Xuân Hương và thơ trữ tình trung đại truyền thống là gì?",
+                options: [
+                    { text: "Cái tôi luôn hướng về công danh và nghĩa vụ đối với triều đình.", isCorrect: false, rationale: "Đó là đặc điểm của thơ ca hào khí Đông A hoặc thơ nhà Nho." },
+                    { text: "Cái tôi cá nhân dũng cảm thừa nhận bi kịch khao khát hạnh phúc và cất tiếng nói phản kháng mãnh liệt.", isCorrect: true, rationale: "Thơ trung đại thường tuân thủ khuôn phép, khuôn mẫu, còn Hồ Xuân Hương đưa cái tôi cá nhân, tiếng nói đòi quyền sống rất 'đời' vào thơ." },
+                    { text: "Cái tôi ẩn mình hoàn toàn đằng sau các hình ảnh ước lệ tượng trưng.", isCorrect: false, rationale: "Hồ Xuân Hương bộc lộ cái tôi rất trực diện và cá tính." },
+                    { text: "Cái tôi thiên về triết lý thiền định và sự hòa nhập tuyệt đối với vũ trụ.", isCorrect: false, rationale: "Không mang đậm chất thiền định Phật giáo như thơ trạng nguyên, thiền sư." }
+                ]
+            },
+            {
+                difficulty: "Khó",
+                color: "bg-amber-100 text-amber-800",
+                question: "Nhịp điệu và việc lặp lại từ \"lại\" trong câu \"Xuân đi xuân lại lại\" tạo nên hiệu quả nghệ thuật đặc sắc nào?",
+                options: [
+                    { text: "Nhịp thơ nhanh, gợi sự gấp gáp, hào hứng chào đón mùa xuân mới.", isCorrect: false, rationale: "Nhịp thơ và từ 'lại' thứ hai tạo cảm giác nặng nề, mệt mỏi chứ không hào hứng." },
+                    { text: "Sự tuần hoàn vô hạn của thiên nhiên đối lập cay đắng với sự một đi không trở lại của tuổi xuân con người.", isCorrect: true, rationale: "Từ 'lại' thứ nhất là trở lại, từ 'lại' thứ hai là lặp lại lần nữa; thiên nhiên tuần hoàn nhưng tuổi xuân con người thì mất đi mãi mãi." },
+                    { text: "Khẳng định sự bất tử của tâm hồn con người trước thời gian.", isCorrect: false, rationale: "Bài thơ nhấn mạnh sự bất lực và bi kịch trước sự bào mòn của thời gian." },
+                    { text: "Nhấn mạnh sự lặp lại đơn điệu nhưng bình yên của cuộc sống nông thôn.", isCorrect: false, rationale: "Không liên quan đến đời sống nông thôn bình yên." }
+                ]
+            },
+
+            // CỰC CỰC CỰC KHÓ (1 câu)
+            {
+                difficulty: "Cực cực cực khó",
+                color: "bg-rose-100 text-rose-800",
+                question: "Xét dưới góc độ cấu trúc thi pháp Đường luật và sự vận động logic của mạch cảm xúc, hai câu luận (\"Xiên ngang mặt đất, rêu làm đám / Đâm toạc chân mây, đá mấy hòn\") giữ vai trò bước ngoặt gì trong việc phá vỡ chuẩn mực thẩm mỹ phong kiến?",
+                options: [
+                    { text: "Chúng tuân thủ triệt để nguyên tắc đối xứng của luật Đường, chỉ thay đổi từ ngữ bằng cách dùng từ Nôm.", isCorrect: false, rationale: "Đây chỉ là hình thức bên ngoài, bản chất cốt lõi nằm ở sự đảo lộn tư duy thẩm mỹ." },
+                    { text: "Chúng đóng vai trò là khoảng lặng trầm mặc chuẩn bị cho sự chấp nhận bi kịch ở câu kết.", isCorrect: false, rationale: "Hai câu luận không phải khoảng lặng mà là cao trào của sự bùng nổ xung đột." },
+                    { text: "Chúng là sự bùng nổ đảo ngược logic cảm xúc: chuyển từ thế bị động, tủi hờn (câu thực) sang thế chủ động phản kháng dữ dội bằng sức mạnh bứt phá của hành động, thách thức quy chuẩn tĩnh tại cổ điển.", isCorrect: true, rationale: "Bằng cách sử dụng nghệ thuật đảo ngữ, động từ mạnh kết hợp với hình ảnh thiên nhiên góc cạnh, tác giả đã đập tan cái nhìn tao nhã, tĩnh tại thông thường để thể hiện sức sống tiềm tàng đầy ngang tàng, phá vỡ khung khổ khắt khe của thơ Đường luật quy phạm." },
+                    { text: "Chúng là nét vẽ tượng trưng dự báo sự sụp đổ của trật tự vũ trụ để lật đổ chế độ phong kiến.", isCorrect: false, rationale: "Đây là sự phản kháng mang tính cá nhân và nữ quyền sâu sắc đối với định kiến và số phận cá nhân, không mang tầm vóc lật đổ chính trị vĩ mô." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionCounter = document.getElementById('question-counter');
+        const difficultyBadge = document.getElementById('difficulty-badge');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const rationaleBox = document.getElementById('rationale-box');
+        const rationaleText = document.getElementById('rationale-text');
+        const nextBtn = document.getElementById('next-btn');
+        const finalScore = document.getElementById('final-score');
+        const resultMessage = document.getElementById('result-message');
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            rationaleBox.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+
+            const q = questions[currentQuestionIndex];
+            questionCounter.textContent = `Câu ${currentQuestionIndex + 1} / ${questions.length}`;
+            difficultyBadge.textContent = q.difficulty;
+            difficultyBadge.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${q.color}`;
+            
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            questionText.textContent = q.question;
+            optionsContainer.innerHTML = '';
+
+            // Shuffle options for randomness
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach((option) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-rose-300 hover:bg-rose-50/50 transition-all font-medium text-slate-700 flex items-center justify-between group";
+                btn.innerHTML = `
+                    <span>${option.text}</span>
+                    <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs group-hover:border-rose-400 group-hover:text-rose-600 transition-all">✓</span>
+                `;
+                btn.onclick = () => selectOption(btn, option);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedBtn, option) {
+            if (answered) return;
+            answered = true;
+
+            const allButtons = optionsContainer.getElementsByTagName('button');
+            const q = questions[currentQuestionIndex];
+
+            Array.from(allButtons).forEach(btn => {
+                btn.disabled = true;
+                const optionText = btn.querySelector('span').textContent;
+                const matchedOption = q.options.find(o => o.text === optionText);
+                
+                if (matchedOption.isCorrect) {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 font-medium flex items-center justify-between";
+                } else if (btn === selectedBtn) {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-rose-300 bg-rose-50 text-rose-900 font-medium flex items-center justify-between";
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 font-medium flex items-center justify-between opacity-60";
+                }
+            });
+
+            if (option.isCorrect) {
+                score++;
+            }
+
+            rationaleText.textContent = option.rationale;
+            rationaleBox.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScore.textContent = score;
+
+            let message = "";
+            if (score === 13) {
+                message = "Tuyệt vời! Bạn là bậc thầy nghiên cứu thơ Hồ Xuân Hương với tư duy phân tích cực kỳ sắc sảo!";
+            } else if (score >= 10) {
+                message = "Rất xuất sắc! Bạn nắm vững kiến thức rất tốt và hiểu sâu sắc các tầng nghĩa trong bài thơ.";
+            } else if (score >= 7) {
+                message = "Kết quả khá tốt! Hãy ôn tập lại một số câu hỏi phần Khó và Cực khó để đạt điểm tuyệt đối nhé.";
+            } else {
+                message = "Cần cố gắng hơn nữa! Hãy đọc lại văn bản bài thơ Tự tình II và thử sức lại nhé.";
+            }
+            resultMessage.textContent = message;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+```eof
+
+---
+
+### Tóm tắt nội dung ứng dụng trò chơi:
+- **13 câu hỏi trắc nghiệm** được chia làm 4 mức độ: **4 câu Dễ**, **4 câu Trung bình**, **4 câu Khó** và **1 câu Cực cực cực khó**.
+- Giao diện dạng web app tương tác hiện đại với hiệu ứng chuyển động mượt mà, thanh tiến độ, hệ thống chấm điểm thời gian thực, và lời giải thích chi tiết cho từng phương án.
+
+Chúc bạn ôn tập thật tốt và chinh phục điểm số cao nhất với bài thơ *Tự tình II*!
